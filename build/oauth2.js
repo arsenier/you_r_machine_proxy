@@ -1,8 +1,8 @@
 function introspectAccessToken(r) {
     r.subrequest("/_oauth2_send_request",
-        function(reply) {
+    function(reply) {
             if (reply.status == 200) {
-                var response = JSON.parse(reply.responseBody);
+                var response = JSON.parse(reply.responseText);
                 if (response.active == true) {
                     r.return(204); // Token is valid, return success code
                 } else {
@@ -14,3 +14,5 @@ function introspectAccessToken(r) {
         }
     );
 }
+
+export default { introspectAccessToken }

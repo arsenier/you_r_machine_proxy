@@ -12,53 +12,55 @@ services:
     networks:
       - app
     ports:
-      - '${API_GATEWAY_PORT:-80}:80'
+      - '${API_GATEWAY_PORT:-8000}:8000'
 
-  ms.courses:
-    container_name: ms.courses
-    image: registry.gitlab.com/devtalks-api-gateway/ms-courses:${MS_COURSES_VERSION}
-    environment:
-      - "DB_DATABASE=${DB_DATABASE_MS_COURSES}"
-    env_file:
-      - .env
+  ms.leaderboard:
+    container_name: ms.leaderboard
+    image: arsenier/yrm_leaderboard:${MS_LEADERBOARD_VERSION}
+    # environment:
+    #   - "DB_DATABASE=${DB_DATABASE_MS_LEADERBOARD}"
+    # env_file:
+    #   - .env
+    volumes:
+      - ../you_r_machine_leaderboard/db:/app/db
     networks:
       - app
-    links:
-      - pgsql
+    # links:
+    #   - pgsql
     restart: always
     expose:
-      - "80"
+      - "8000"
 
   ms.auth:
     container_name: ms.auth
-    image: registry.gitlab.com/devtalks-api-gateway/ms-auth:${MS_AUTH_VERSION}
-    environment:
-      - "DB_DATABASE=${DB_DATABASE_MS_AUTH}"
-    env_file:
-      - .env
+    image: arsenier/yrm_auth:${MS_AUTH_VERSION}
+    # environment:
+    #   - "DB_DATABASE=${DB_DATABASE_MS_AUTH}"
+    # env_file:
+    #   - .env
     networks:
       - app
-    links:
-      - pgsql
+    # links:
+    #   - pgsql
     restart: always
     expose:
-      - "80"
+      - "8000"
 
-  pgsql:
-    container_name: pgsql
-    image: 'postgres:13'
-    ports:
-      - '${FORWARD_DB_PORT:-5432}:5432'
-    env_file:
-      - .env
-    volumes:
-      - 'apppgsql:/var/lib/postgresql/data'
-    networks:
-      - app
-    healthcheck:
-      test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
-      retries: 3
-      timeout: 5s
+  # pgsql:
+  #   container_name: pgsql
+  #   image: 'postgres:13'
+  #   ports:
+  #     - '${FORWARD_DB_PORT:-5432}:5432'
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - 'apppgsql:/var/lib/postgresql/data'
+  #   networks:
+  #     - app
+  #   healthcheck:
+  #     test: [ "CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
+  #     retries: 3
+  #     timeout: 5s
 
 networks:
   app:

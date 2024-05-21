@@ -4,8 +4,8 @@ docker-run:
 	docker-compose up -d
 
 db-install:
-	docker-compose exec pgsql createdb -U sail ms_courses
-	docker-compose exec ms.courses php artisan migrate
+	docker-compose exec pgsql createdb -U sail ms_leaderboard
+	docker-compose exec ms.leaderboard php artisan migrate
 	docker-compose exec pgsql createdb -U sail ms_auth
 	docker-compose exec ms.auth php artisan migrate --seed
 
