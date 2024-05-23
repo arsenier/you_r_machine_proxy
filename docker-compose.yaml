@@ -14,6 +14,17 @@ services:
     ports:
       - '${API_GATEWAY_PORT:-8000}:8000'
 
+  game:
+    container_name: you_r_machine_game
+    image: arsenier/yrm_godot:v1.1
+    networks:
+      - app
+    ports:
+      - 127.0.0.1:80:8000
+    restart: always
+    # expose:
+    #   - "8000"
+
   ms.leaderboard:
     container_name: ms.leaderboard
     image: arsenier/yrm_leaderboard:${MS_LEADERBOARD_VERSION}
@@ -38,6 +49,8 @@ services:
     #   - "DB_DATABASE=${DB_DATABASE_MS_AUTH}"
     # env_file:
     #   - .env
+    volumes:
+      - ../you_r_machine_auth/db:/app/db
     networks:
       - app
     # links:
